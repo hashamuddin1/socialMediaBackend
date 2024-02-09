@@ -2,28 +2,13 @@ const { users } = require("../models/user");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+import { userSignUpValidate } from "../utils/validations/userValidation";
 
 const userSignUp = async (req, res) => {
   try {
-    if (!req.body.email) {
-      return res.status(400).send({
-        success: false,
-        message: "This Email Is Required",
-      });
-    }
-
-    if (!req.body.first_name) {
-      return res.status(400).send({
-        success: false,
-        message: "This First Name Is Required",
-      });
-    }
-
-    if (!req.body.last_name) {
-      return res.status(400).send({
-        success: false,
-        message: "This Last Name Is Required",
-      });
+    const { error } = await userSignUpValidate.validateAsync(req.body);
+    if (error) {
+      return reply.send(CustomError.badRequest(error.message));
     }
     const checkEmail = await users.findOne({ email: req.body.email });
     if (checkEmail) {
