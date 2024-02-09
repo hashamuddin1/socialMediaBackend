@@ -10,7 +10,9 @@ const userSignUp = async (req, res) => {
     if (error) {
       return reply.send(CustomError.badRequest(error.message));
     }
-    const checkEmail = await users.findOne({ email: req.body.email });
+    const checkEmail = await users
+      .findOne({ email: req.body.email })
+      .select({ email: 1 });
     if (checkEmail) {
       return res.status(400).send({
         success: false,
