@@ -2,13 +2,19 @@ const { users } = require("../models/user");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-import { userSignUpValidate } from "../utils/validations/userValidation";
+import {
+  userSignUpValidate,
+  userLoginValidate,
+} from "../utils/validations/userValidation";
 
 const userSignUp = async (req, res) => {
   try {
     const { error } = await userSignUpValidate.validateAsync(req.body);
     if (error) {
-      return reply.send(CustomError.badRequest(error.message));
+      return res.status(400).send({
+        success: false,
+        message: error.message,
+      });
     }
     const checkEmail = await users
       .findOne({ email: req.body.email })
@@ -50,9 +56,61 @@ const userSignUp = async (req, res) => {
     console.log(e);
     return res.status(400).send({
       success: false,
-      message: "Something went wrong",
+      message: "Something went wrong on user signup",
     });
   }
 };
 
-module.exports = { userSignUp };
+const userLogin = async (req, res) => {
+  try {
+    const { error } = await userLoginValidate.validateAsync(req.body);
+    if (error) {
+      return res.status(400).send({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    const fetchUser = await users.findOne({
+      email: req.body.email,
+    });
+    if (!fetchUser) {
+      return res.status(400).send({
+        status: 400,
+        message: "Email or Password is Incorrect",
+      });
+    }
+
+    if (
+      fetchUser &&
+      (await bcrypt.compare(req.body.password, fetchUser.password))
+    ) {
+      const token = jwt.sign(
+        { _id: fetchUser._id, email: req.body.email },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: "30d",
+        }
+      );
+      return res.status(200).send({
+        success: true,
+        message: "User Login Successfully",
+        data: fetchUser,
+        token,
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        message: "Email or Password is Incorrect",
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong on user login",
+    });
+  }
+};
+
+module.exports = { userSignUp, userLogin };

@@ -18,3 +18,14 @@ export const userSignUpValidate = joi.object({
     "string.empty": "Password is not allowed to be empty",
   }),
 });
+
+export const userLoginValidate = joi.object({
+  email: joi.string().email().required().messages({
+    "any.required": "Email is not allowed to be empty",
+    "string.empty": "Email is not allowed to be empty",
+  }),
+  password: joi.string().required().messages({
+    "any.required": "Password is not allowed to be empty",
+    "string.empty": "Password is not allowed to be empty",
+  }),
+});
