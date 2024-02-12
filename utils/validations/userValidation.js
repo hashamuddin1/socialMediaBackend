@@ -1,6 +1,6 @@
-import joi from "joi";
+const joi = require("joi");
 
-export const userSignUpValidate = joi.object({
+const userSignUpValidate = joi.object({
   email: joi.string().email().required().messages({
     "any.required": "Email is not allowed to be empty",
     "string.empty": "Email is not allowed to be empty",
@@ -19,7 +19,7 @@ export const userSignUpValidate = joi.object({
   }),
 });
 
-export const userLoginValidate = joi.object({
+const userLoginValidate = joi.object({
   email: joi.string().email().required().messages({
     "any.required": "Email is not allowed to be empty",
     "string.empty": "Email is not allowed to be empty",
@@ -29,3 +29,5 @@ export const userLoginValidate = joi.object({
     "string.empty": "Password is not allowed to be empty",
   }),
 });
+
+module.exports = { userSignUpValidate, userLoginValidate };

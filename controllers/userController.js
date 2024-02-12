@@ -2,10 +2,10 @@ const { users } = require("../models/user");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-import {
+const {
   userSignUpValidate,
   userLoginValidate,
-} from "../utils/validations/userValidation";
+} = require("../utils/validations/userValidation");
 
 const userSignUp = async (req, res) => {
   try {
@@ -46,7 +46,7 @@ const userSignUp = async (req, res) => {
       }
     );
 
-    return res.status(200).send({
+    return res.status(201).send({
       success: true,
       message: "User Registered Successfully",
       data: user,
