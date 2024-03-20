@@ -113,4 +113,24 @@ const userLogin = async (req, res) => {
   }
 };
 
-module.exports = { userSignUp, userLogin };
+const getProfile = async (req, res) => {
+  try {
+    const fetchUser = await users
+      .findOne({ _id: req.user._id })
+      .select({ password: 0 });
+
+    return res.status(200).send({
+      success: true,
+      message: "Fetch User Profile Successfully",
+      data: fetchUser,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong on fetch user profile",
+    });
+  }
+};
+
+module.exports = { userSignUp, userLogin, getProfile };
