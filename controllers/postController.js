@@ -15,7 +15,7 @@ const addPost = async (req, res) => {
     const insertPost = new posts({
       description: req.body.description,
       userId: req.user._id,
-      postImage: file.filename,
+      postImage: req.body.postImage,
     });
 
     await insertPost.save();
