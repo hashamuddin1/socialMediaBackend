@@ -1,9 +1,17 @@
 const { posts } = require("../models/post");
 require("dotenv").config();
-const { userSignUpValidate } = require("../utils/validations/userValidation");
+const { addPostValidate } = require("../utils/validations/userValidation");
 
 const addPost = async (req, res) => {
   try {
+    const { error } = await addPostValidate.validateAsync(req.body);
+    if (error) {
+      return res.status(400).send({
+        success: false,
+        message: error.message,
+      });
+    }
+
     const insertPost = new posts({
       description: req.body.description,
       userId: req.user._id,
