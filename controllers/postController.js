@@ -59,4 +59,15 @@ const getMyPost = async (req, res) => {
   }
 };
 
-module.exports = { addPost, getMyPost };
+const updatePost = async (req, res) => {
+  try {
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong on inserting post",
+    });
+  }
+};
+
+module.exports = { addPost, getMyPost, updatePost };
