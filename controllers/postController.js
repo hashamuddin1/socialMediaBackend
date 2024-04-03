@@ -1,6 +1,9 @@
 const { posts } = require("../models/post");
 require("dotenv").config();
-const { addPostValidate } = require("../utils/validations/userValidation");
+const {
+  addPostValidate,
+  updatePostValidate,
+} = require("../utils/validations/postValidation");
 const mongoose = require("mongoose");
 
 const addPost = async (req, res) => {
@@ -61,6 +64,14 @@ const getMyPost = async (req, res) => {
 
 const updateMyPost = async (req, res) => {
   try {
+    const { error } = await updatePostValidate.validateAsync(req.body);
+    if (error) {
+      return res.status(400).send({
+        success: false,
+        message: error.message,
+      });
+    }
+
     const fetchPost = await posts
       .findOne({ _id: req.query.postId })
       .select({ _id: 1 });
