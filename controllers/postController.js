@@ -59,8 +59,31 @@ const getMyPost = async (req, res) => {
   }
 };
 
-const updatePost = async (req, res) => {
+const updateMyPost = async (req, res) => {
   try {
+    const fetchPost = await posts
+      .findOne({ _id: req.query.postId })
+      .select({ _id: 1 });
+
+    if (!fetchPost) {
+      return res.status(400).send({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    await posts.updateOne(
+      { _id: req.query.postId },
+      {
+        description: req.body.description,
+        postImage: req.body.postImage,
+      }
+    );
+
+    return res.status(200).send({
+      success: true,
+      message: "Update Post Successfully",
+    });
   } catch (e) {
     console.log(e);
     return res.status(400).send({
@@ -70,4 +93,4 @@ const updatePost = async (req, res) => {
   }
 };
 
-module.exports = { addPost, getMyPost, updatePost };
+module.exports = { addPost, getMyPost, updateMyPost };
