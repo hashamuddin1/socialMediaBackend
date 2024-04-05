@@ -11,5 +11,10 @@
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.4",
     "nodemon": "^3.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1"
   }
 }
