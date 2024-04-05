@@ -22,5 +22,8 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   rules: {
+    'no-unused-vars': 'error',
+    quotes: ['error', 'single'],
+    'no-multiple-empty-lines': ['error', { max: 2 }],
   },
 };

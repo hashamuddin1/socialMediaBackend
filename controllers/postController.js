@@ -1,10 +1,11 @@
-const { posts } = require("../models/post");
-require("dotenv").config();
+const mongoose = require('mongoose');
+const { Posts } = require('../models/post');
+require('dotenv').config();
 const {
   addPostValidate,
   updatePostValidate,
-} = require("../utils/validations/postValidation");
-const mongoose = require("mongoose");
+} = require('../utils/validations/postValidation');
+
 
 const addPost = async (req, res) => {
   try {
@@ -16,7 +17,7 @@ const addPost = async (req, res) => {
       });
     }
 
-    const insertPost = new posts({
+    const insertPost = new Posts({
       description: req.body.description,
       userId: req.user._id,
       postImage: req.body.postImage,
