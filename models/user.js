@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+/* eslint-disable new-cap */
+const mongoose = require('mongoose');
 
-const user_schema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   first_name: {
     type: String,
     required: true,
   },
-
   last_name: {
     type: String,
     required: true,
@@ -22,8 +22,6 @@ const user_schema = new mongoose.Schema({
   },
 });
 
-//creating collection
-const users = new mongoose.model("user", user_schema);
+const Users = new mongoose.model('user', userSchema);
 
-//export collection
-module.exports = { users };
+module.exports = { Users };

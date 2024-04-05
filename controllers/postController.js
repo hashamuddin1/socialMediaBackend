@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const { Posts } = require('../models/post');
 require('dotenv').config();
@@ -27,21 +29,21 @@ const addPost = async (req, res) => {
 
     return res.status(201).send({
       success: true,
-      message: "Post Inserted Successfully",
+      message: 'Post Inserted Successfully',
       data: insertPost,
     });
   } catch (e) {
     console.log(e);
     return res.status(400).send({
       success: false,
-      message: "Something went wrong on inserting post",
+      message: 'Something went wrong on inserting post',
     });
   }
 };
 
 const getMyPost = async (req, res) => {
   try {
-    const fetchAllPost = await posts.aggregate([
+    const fetchAllPost = await Posts.aggregate([
       {
         $match: {
           userId: new mongoose.Types.ObjectId(req.user._id),
@@ -51,14 +53,14 @@ const getMyPost = async (req, res) => {
 
     return res.status(200).send({
       success: true,
-      message: "Fetch All Post By User Successfully",
+      message: 'Fetch All Post By User Successfully',
       data: fetchAllPost,
     });
   } catch (e) {
     console.log(e);
     return res.status(400).send({
       success: false,
-      message: "Something went wrong on inserting post",
+      message: 'Something went wrong on inserting post',
     });
   }
 };
@@ -73,34 +75,34 @@ const updateMyPost = async (req, res) => {
       });
     }
 
-    const fetchPost = await posts
+    const fetchPost = await Posts
       .findOne({ _id: req.query.postId })
       .select({ _id: 1 });
 
     if (!fetchPost) {
       return res.status(400).send({
         success: false,
-        message: "Post not found",
+        message: 'Post not found',
       });
     }
 
-    await posts.updateOne(
+    await Posts.updateOne(
       { _id: req.query.postId },
       {
         description: req.body.description,
         postImage: req.body.postImage,
-      }
+      },
     );
 
     return res.status(200).send({
       success: true,
-      message: "Update Post Successfully",
+      message: 'Update Post Successfully',
     });
   } catch (e) {
     console.log(e);
     return res.status(400).send({
       success: false,
-      message: "Something went wrong on inserting post",
+      message: 'Something went wrong on inserting post',
     });
   }
 };

@@ -1,5 +1,6 @@
 {
   "rules": {
-    "new-cap": "off"
+    "new-cap": "off",
+    "no-console": "off"
   }
 }
