@@ -8,20 +8,23 @@ const {
   userSignUpValidate,
   userLoginValidate,
 } = require('../utils/validations/userValidation');
+const logger = require('../utils/logger/index');
 
 const userSignUp = async (req, res) => {
   try {
     const { error } = await userSignUpValidate.validateAsync(req.body);
     if (error) {
+      logger.error(error.message);
       return res.status(400).send({
         success: false,
         message: error.message,
       });
     }
-    const checkEmail = await Users
-      .findOne({ email: req.body.email })
-      .select({ email: 1 });
+    const checkEmail = await Users.findOne({ email: req.body.email }).select({
+      email: 1,
+    });
     if (checkEmail) {
+      logger.error('This Email is already Exist');
       return res.status(400).send({
         success: false,
         message: 'This Email is already Exist',
@@ -48,6 +51,7 @@ const userSignUp = async (req, res) => {
       },
     );
 
+    logger.info('User Registered Successfully');
     return res.status(201).send({
       success: true,
       message: 'User Registered Successfully',
@@ -56,6 +60,7 @@ const userSignUp = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
+    logger.error('Something went wrong on user signup');
     return res.status(400).send({
       success: false,
       message: 'Something went wrong on user signup',
@@ -67,6 +72,7 @@ const userLogin = async (req, res) => {
   try {
     const { error } = await userLoginValidate.validateAsync(req.body);
     if (error) {
+      logger.error(error.message);
       return res.status(400).send({
         success: false,
         message: error.message,
@@ -77,6 +83,7 @@ const userLogin = async (req, res) => {
       email: req.body.email,
     });
     if (!fetchUser) {
+      logger.error('Email or Password is Incorrect');
       return res.status(400).send({
         status: 400,
         message: 'Email or Password is Incorrect',
@@ -94,6 +101,8 @@ const userLogin = async (req, res) => {
           expiresIn: '30d',
         },
       );
+
+      logger.info('User Login Successfully');
       return res.status(200).send({
         success: true,
         message: 'User Login Successfully',
@@ -101,12 +110,14 @@ const userLogin = async (req, res) => {
         token,
       });
     }
+    logger.error('Email or Password is Incorrect');
     return res.status(400).send({
       success: false,
       message: 'Email or Password is Incorrect',
     });
   } catch (e) {
     console.log(e);
+    logger.error('Something went wrong on user login');
     return res.status(400).send({
       success: false,
       message: 'Something went wrong on user login',
@@ -116,10 +127,11 @@ const userLogin = async (req, res) => {
 
 const getProfile = async (req, res) => {
   try {
-    const fetchUser = await Users
-      .findOne({ _id: req.user._id })
-      .select({ password: 0 });
+    const fetchUser = await Users.findOne({ _id: req.user._id }).select({
+      password: 0,
+    });
 
+    logger.info('Fetch User Profile Successfully');
     return res.status(200).send({
       success: true,
       message: 'Fetch User Profile Successfully',
@@ -127,6 +139,7 @@ const getProfile = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
+    logger.error('Something went wrong on fetch user profile');
     return res.status(400).send({
       success: false,
       message: 'Something went wrong on fetch user profile',
