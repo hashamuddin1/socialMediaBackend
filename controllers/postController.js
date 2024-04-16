@@ -7,12 +7,14 @@ const {
   addPostValidate,
   updatePostValidate,
 } = require('../utils/validations/postValidation');
+const logger = require('../utils/logger/index');
 
 
 const addPost = async (req, res) => {
   try {
     const { error } = await addPostValidate.validateAsync(req.body);
     if (error) {
+      logger.error(error.message);
       return res.status(400).send({
         success: false,
         message: error.message,
@@ -27,6 +29,7 @@ const addPost = async (req, res) => {
 
     await insertPost.save();
 
+    logger.info('Post Inserted Successfully');
     return res.status(201).send({
       success: true,
       message: 'Post Inserted Successfully',
@@ -34,6 +37,7 @@ const addPost = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
+    logger.error('Something went wrong on inserting post');
     return res.status(400).send({
       success: false,
       message: 'Something went wrong on inserting post',
@@ -51,6 +55,7 @@ const getMyPost = async (req, res) => {
       },
     ]);
 
+    logger.info('Fetch All Post By User Successfully');
     return res.status(200).send({
       success: true,
       message: 'Fetch All Post By User Successfully',
@@ -58,6 +63,7 @@ const getMyPost = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
+    logger.error('Something went wrong on inserting post');
     return res.status(400).send({
       success: false,
       message: 'Something went wrong on inserting post',
@@ -69,6 +75,7 @@ const updateMyPost = async (req, res) => {
   try {
     const { error } = await updatePostValidate.validateAsync(req.body);
     if (error) {
+      logger.error(error.message);
       return res.status(400).send({
         success: false,
         message: error.message,
@@ -80,6 +87,7 @@ const updateMyPost = async (req, res) => {
       .select({ _id: 1 });
 
     if (!fetchPost) {
+      logger.error('Post not found');
       return res.status(400).send({
         success: false,
         message: 'Post not found',
@@ -94,12 +102,14 @@ const updateMyPost = async (req, res) => {
       },
     );
 
+    logger.info('Update Post Successfully');
     return res.status(200).send({
       success: true,
       message: 'Update Post Successfully',
     });
   } catch (e) {
     console.log(e);
+    logger.error('Something went wrong on inserting post');
     return res.status(400).send({
       success: false,
       message: 'Something went wrong on inserting post',
